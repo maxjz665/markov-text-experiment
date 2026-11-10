@@ -1,0 +1,8 @@
+# Данные СМАЛТ: не публиковать
+data/private/
+data/raw/
+*.sql
+*.sql.gz
+__pycache__/
+# личная копия демо-страницы
+results/demo_explained.html

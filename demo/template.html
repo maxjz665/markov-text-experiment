@@ -1,0 +1,929 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Буквы и авторы СМАЛТ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column (≈68ch) for prose; figure panels widen to 1080px; matrix + detail panel side by side on desktop, stacked on phones. */
+/* Только тёмная тема — независимо от настроек системы */
+:root {
+  --bg: #10121a; --panel: #171a24; --ink: #e8eaf2; --ink-2: #b3b8c9; --muted: #7c8296; --rule: #2a2e3c;
+  --accent: #7aa7ff; --hist: #e5a75e;
+  --seq-0: #1a1e2b; --seq-1: #2f63b0; --seq-2: #c7defc;
+  --div-neg: #3987e5; --div-mid: #252936; --div-pos: #e66767; --hatch: #3a3f50;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9;
+  --f-display: "Alegreya", "PT Serif", Georgia, "Times New Roman", serif;
+  --f-body: "Alegreya Sans", "PT Sans", "Segoe UI", Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", Consolas, "DejaVu Sans Mono", monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 17px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+.wrap { max-width: 1080px; margin: 0 auto; position: relative; z-index: 1; }
+.prose { max-width: 68ch; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 700; text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(2.4rem, 6vw, 3.6rem); letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.1rem); }
+h3 { font-size: 1.15rem; }
+p { margin: 0; }
+.eyebrow { font-family: var(--f-mono); font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.hist { color: var(--hist); font-weight: 700; }
+a { color: var(--accent); }
+
+header.top { padding-block: 56px 32px; display: grid; gap: 18px; border-bottom: 1px solid var(--rule); }
+.lead { font-size: 1.2rem; color: var(--ink-2); max-width: 62ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 0.98rem; color: var(--ink-2); }
+.facts b { font-family: var(--f-display); font-size: 1.6rem; color: var(--ink); font-weight: 700; margin-right: 6px; }
+
+section { padding-block: 48px 8px; display: grid; gap: 18px; }
+section > header { display: grid; gap: 8px; }
+section > header p { color: var(--ink-2); max-width: 68ch; }
+
+.panel { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 18px; min-width: 0; }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* controls */
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chip {
+  font: 500 0.92rem var(--f-body); color: var(--ink-2); background: transparent; border: 1px solid var(--rule);
+  border-radius: 999px; padding: 5px 12px 5px 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+}
+.chip:hover { border-color: var(--muted); color: var(--ink); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.seg button { font: 500 0.88rem var(--f-body); border: 0; background: transparent; color: var(--ink-2); padding: 5px 12px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+select { font: 500 0.95rem var(--f-body); color: var(--ink); background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 5px 8px; }
+label.inline { display: inline-flex; gap: 8px; align-items: center; color: var(--ink-2); font-size: 0.92rem; }
+.spacer { flex: 1; }
+
+/* corpus table */
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+th { text-align: left; font-weight: 500; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+td { padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+td.r, th.r { text-align: right; }
+td.num { white-space: nowrap; }
+tbody tr { cursor: pointer; }
+tbody tr:hover td { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+td .who { display: inline-flex; gap: 8px; align-items: center; font-weight: 500; white-space: nowrap; }
+td .mags { color: var(--muted); font-size: 0.86rem; }
+
+/* matrix layout */
+.matrix-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 18px; align-items: start; }
+@media (max-width: 860px) { .matrix-grid { grid-template-columns: minmax(0, 1fr); } }
+svg.hm { display: block; width: 100%; min-width: 540px; height: auto; }
+svg text { fill: var(--ink-2); font-family: var(--f-body); }
+.detail { display: grid; gap: 12px; }
+.detail .pair { font-family: var(--f-display); font-size: 2.6rem; line-height: 1; }
+.detail .pair span { color: var(--muted); font-size: 1.6rem; padding: 0 4px; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: 0.95rem; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.words { display: flex; flex-wrap: wrap; gap: 6px; }
+.word { font-family: var(--f-display); font-size: 1.05rem; background: color-mix(in srgb, var(--accent) 9%, transparent); border-radius: 4px; padding: 1px 8px; }
+.word small { font-family: var(--f-mono); font-size: 0.72rem; color: var(--muted); margin-left: 4px; }
+.note { font-size: 0.86rem; color: var(--muted); }
+.legend { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; color: var(--muted); flex-wrap: wrap; }
+.ramp { width: 160px; height: 10px; border-radius: 2px; }
+.sw-hatch { width: 18px; height: 10px; border-radius: 2px; background: repeating-linear-gradient(45deg, var(--hatch) 0 2px, transparent 2px 5px); border: 1px solid var(--rule); }
+
+.difflist { display: grid; gap: 0; }
+#pr-errors { max-height: 360px; overflow-y: auto; padding-right: 6px; }
+.diffrow { display: grid; grid-template-columns: 54px 1fr auto; gap: 10px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--rule); cursor: pointer; font-size: 0.92rem; }
+.diffrow:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+.diffrow .bg { font-family: var(--f-display); font-size: 1.2rem; }
+.diffrow .ws { color: var(--muted); font-size: 0.84rem; }
+
+/* small multiples */
+.vc-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 900px) { .vc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .vc-grid { grid-template-columns: minmax(0, 1fr); } }
+.vc-grid svg { width: 100%; height: auto; display: block; }
+.vc-grid h3 { font-family: var(--f-mono); font-weight: 500; font-size: 0.95rem; margin-bottom: 4px; }
+
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 860px) { .two { grid-template-columns: minmax(0, 1fr); } }
+
+.gen-out { display: flex; flex-wrap: wrap; gap: 8px 14px; font-family: var(--f-display); font-size: 1.45rem; min-height: 6.5em; align-content: flex-start; }
+.gen-out span { white-space: nowrap; }
+button.primary { font: 700 0.95rem var(--f-body); background: var(--ink); color: var(--bg); border: 0; border-radius: 6px; padding: 8px 16px; cursor: pointer; }
+button.primary:hover { background: var(--accent); }
+
+.findings { display: grid; gap: 14px; counter-reset: f; padding: 0; margin: 0; list-style: none; max-width: 72ch; }
+.findings li { display: grid; grid-template-columns: 2.2rem 1fr; gap: 6px; }
+.findings li::before { counter-increment: f; content: counter(f); font-family: var(--f-display); font-size: 1.5rem; color: var(--accent); line-height: 1.2; }
+.hypo {
+  margin-top: 18px; display: grid; gap: 18px; padding: clamp(22px, 4vw, 40px);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--rule)); border-radius: 10px;
+  background: radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%), var(--panel);
+}
+.hypo .eyebrow { color: var(--accent); }
+.hypo-text { font-family: var(--f-display); font-weight: 500; font-size: clamp(1.45rem, 3.2vw, 2.15rem); line-height: 1.3; text-wrap: balance; max-width: 40ch; }
+.hypo-text .q { color: var(--hist); }
+.hypo-status { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; color: var(--ink-2); font-size: 0.95rem; }
+.pill { font: 700 0.78rem var(--f-body); letter-spacing: 0.05em; text-transform: uppercase; padding: 4px 11px; border-radius: 999px; background: color-mix(in srgb, var(--hist) 18%, transparent); color: var(--hist); white-space: nowrap; }
+.hypo-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; border-top: 1px solid var(--rule); padding-top: 18px; }
+@media (max-width: 760px) { .hypo-steps { grid-template-columns: minmax(0, 1fr); } }
+.hypo-steps div { display: grid; gap: 4px; align-content: start; }
+.hypo-steps b { font-family: var(--f-display); font-size: 1.12rem; }
+.hypo-steps span { color: var(--ink-2); font-size: 0.92rem; }
+.explain {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 22px; padding: 16px 18px;
+  border: 1px dashed color-mix(in srgb, var(--hist) 50%, var(--rule)); border-radius: 8px;
+  background: color-mix(in srgb, var(--hist) 7%, var(--panel)); font-size: 0.95rem;
+}
+.explain .ex-topic { grid-column: 1 / -1; font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--hist); }
+.explain .ex-col { display: grid; gap: 4px; align-content: start; min-width: 0; }
+.explain .ex-col b { font-family: var(--f-display); font-size: 1.02rem; }
+.explain .ex-col p { color: var(--ink-2); }
+@media (max-width: 700px) { .explain { grid-template-columns: minmax(0, 1fr); } }
+.ex-banner { font-size: 0.9rem; color: var(--hist); border: 1px solid color-mix(in srgb, var(--hist) 45%, var(--rule)); border-radius: 6px; padding: 6px 12px; justify-self: start; }
+body.no-explain .explain, body.no-explain .ex-banner { display: none; }
+#ex-toggle {
+  position: fixed; z-index: 35; right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  font: 700 0.9rem var(--f-body); color: var(--bg); background: var(--hist); border: 0; border-radius: 999px; padding: 9px 16px;
+  cursor: pointer; box-shadow: 0 4px 14px rgb(0 0 0 / 0.2);
+}
+ul.plain { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; max-width: 72ch; color: var(--ink-2); }
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
+
+#tip {
+  position: fixed; pointer-events: none; z-index: 40; background: var(--ink); color: var(--bg); font-size: 0.82rem;
+  padding: 6px 9px; border-radius: 5px; max-width: 280px; line-height: 1.35; box-shadow: 0 4px 14px rgb(0 0 0 / 0.18);
+}
+/* фоновые частицы и след курсора */
+#fx-particles, #fx-trail { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+#fx-particles { z-index: 0; }
+#fx-trail { z-index: 30; }
+/* выплывание при прокрутке: срабатывает каждый раз, в обе стороны */
+.js .reveal {
+  opacity: 0; transform: translateY(var(--rv, 42px)) scale(0.985); filter: blur(3px);
+  transition: opacity 0.7s cubic-bezier(.2,.7,.2,1), transform 0.85s cubic-bezier(.2,.7,.2,1), filter 0.7s ease;
+}
+.js .reveal.above { --rv: -42px; }
+.js .reveal.in { opacity: 1; transform: none; filter: none; transition-delay: var(--d, 0ms); }
+.js .panel.reveal, .js .matrix-grid > .reveal { filter: none; }
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal { transform: none; filter: none; transition: opacity 0.3s ease; }
+}
+@media (prefers-reduced-motion: no-preference) { .gen-out span { animation: rise 0.35s ease both; } }
+@keyframes rise { from { opacity: 0.2; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+<canvas id="fx-particles" aria-hidden="true"></canvas>
+<div class="wrap">
+  <header class="top">
+    <!--EXPLAIN--><div class="ex-banner">Личная копия с пояснениями. Для показа на встрече используйте demo.html.</div><!--/EXPLAIN-->
+    <div class="eyebrow">СМАЛТ · цепи Маркова первого порядка · дореформенная орфография</div>
+    <h1>Буквы и авторы</h1>
+    <p class="lead">Как часто за одной буквой следует другая, и отличаются ли эти вероятности у разных авторов журналов XIX века.
+      Для каждого автора построены две простейшие цепи: «буква → буква» и «гласная → согласная».</p>
+    <div class="facts" id="facts"></div>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Вся страница</div><div class="ex-col"><b>Простыми словами</b><p>Для каждого из семи авторов мы посчитали, какая буква за какой чаще идёт в его текстах. Потом сравнили эти таблицы между авторами и проверили, можно ли по ним отличить одного автора от другого.</p></div><div class="ex-col"><b>Зачем</b><p>Задача — построить простейшие марковские модели на размеченных текстах СМАЛТ для разных авторов. Страница показывает результат и подводит к исследовательской гипотезе — с неё начинается диссертация.</p></div></aside><!--/EXPLAIN-->
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Цифры вверху</div><div class="ex-col"><b>Простыми словами</b><p>«Пара букв» — две соседние буквы внутри одного слова. В слове «слово» пять букв и четыре пары: с-л, л-о, о-в, в-о. 36 букв — это современный алфавит плюс дореформенные ѣ, і, ѳ.</p></div><div class="ex-col"><b>Зачем</b><p>Показывает масштаб: оценки опираются на два миллиона наблюдений, а не на пару страниц текста.</p></div></aside><!--/EXPLAIN-->
+  </header>
+
+  <section id="corpus">
+    <header>
+      <div class="eyebrow">Корпус</div>
+      <h2>Только эталонные тексты</h2>
+      <p>В выборку вошли тексты, которые в СМАЛТ отмечены как «Эталон» (авторство подтверждено) и «Статья проверена».
+        Дубликаты, переводы и частные письма исключены.</p>
+    </header>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Отбор текстов</div><div class="ex-col"><b>Простыми словами</b><p>В СМАЛТ у каждого текста есть пометка, насколько точно известен автор. Мы взяли только «Эталон» (авторство подтверждено) и только проверенные статьи. Убрали дубликат, переводы М. М. Достоевского из Шиллера, его частные письма и один текст, где при наборе ѣ заменили на е.</p></div><div class="ex-col"><b>Зачем</b><p>Если автор текста под сомнением, сравнивать «авторов» бессмысленно. Перевод несёт стиль оригинала, письма — другой жанр, а текст в другой орфографии дал бы ложное различие. Так мы сравниваем авторов, а не случайности набора.</p></div></aside><!--/EXPLAIN-->
+    <div class="panel scroll"><table id="corpus-table"></table></div>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Таблица авторов</div><div class="ex-col"><b>Простыми словами</b><p>Сколько у каждого автора текстов, за какие годы, сколько в них букв и пар букв, в каких журналах они напечатаны.</p></div><div class="ex-col"><b>Зачем</b><p>Видно главную трудность данных: у Ф. М. Достоевского текста в 15 раз больше, чем у Пуцыковича, а журналы и годы у авторов разные. Поэтому дальше есть «равные выборки» и оговорки про тему.</p></div></aside><!--/EXPLAIN-->
+  </section>
+
+  <section id="matrix">
+    <header>
+      <div class="eyebrow">Модель A</div>
+      <h2>Матрица переходов «буква → буква»</h2>
+      <p>Строка — текущая буква, столбец — следующая. Цвет показывает P(j | i): долю переходов из буквы i, которые ведут в j.
+        Считаются только соседние буквы внутри слова. Буквы <span class="hist">ѣ і ѳ</span> — отдельные состояния.</p>
+    </header>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Матрица переходов</div><div class="ex-col"><b>Простыми словами</b><p>Таблица 36 × 36. Слева — буква, сверху — какая буква идёт за ней. Цвет читается по шкале над матрицей: чем светлее клетка, тем больше значение. В режиме «Вероятность P» цвет показывает долю: какая часть всех продолжений буквы слева приходится на букву сверху, и каждая строка в сумме даёт 1. В режиме «Число переходов N» — сколько раз пара встретилась вообще. Например, у Достоевского после «г» в 56 % случаев стоит «о»: его, того, много. Это и есть цепь Маркова первого порядка: следующая буква зависит только от текущей.</p></div><div class="ex-col"><b>Зачем</b><p>Это самая простая модель «почерка» на уровне букв. Именно такие цепи использовали Марков (1913) и Хмелёв (2000). Всё остальное на странице построено из этих таблиц.</p></div></aside><!--/EXPLAIN-->
+    <div class="controls" id="m-authors"></div>
+    <div class="matrix-grid">
+      <div class="panel" style="display:grid;gap:12px">
+        <div class="controls">
+          <div class="seg" id="m-metric">
+            <button type="button" data-v="P" aria-pressed="true">Вероятность P</button>
+            <button type="button" data-v="N" aria-pressed="false">Число переходов N</button>
+          </div>
+          <div class="spacer"></div>
+          <div class="legend" id="m-legend"></div>
+        </div>
+        <div class="scroll"><svg class="hm" id="m-svg" role="img" aria-label="Тепловая карта переходов между буквами"></svg></div>
+      </div>
+      <aside class="panel detail" id="m-detail" aria-live="polite"></aside>
+    </div>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Переключатель P и N</div><div class="ex-col"><b>Простыми словами</b><p>N — сколько раз переход встретился. P — какую долю он составляет среди всех продолжений этой буквы: P(о | г) = число «го» / число всех пар, начинающихся с «г».</p></div><div class="ex-col"><b>Зачем</b><p>Авторов сравнивают по P, потому что объём текста у всех разный: у Достоевского все N большие просто потому, что текста больше. N нужен, чтобы понимать, насколько надёжна каждая оценка.</p></div></aside><!--/EXPLAIN-->
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Заштрихованные и бледные строки</div><div class="ex-col"><b>Простыми словами</b><p>Буквы ё и ѳ встречаются редко, и у некоторых авторов из них меньше 30 переходов. Такие строки помечены курсивом, а если переходов нет совсем — заштрихованы.</p></div><div class="ex-col"><b>Зачем</b><p>По десятку случаев вероятность не оценить: одна лишняя фамилия меняет её вдвое. Пометка не даёт делать выводы по шуму. Порог 30 — техническое правило, а не статистический критерий.</p></div></aside><!--/EXPLAIN-->
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Панель со словами</div><div class="ex-col"><b>Простыми словами</b><p>Для выбранной клетки показаны вероятность, число переходов и три слова, в которых этот переход встречается чаще всего.</p></div><div class="ex-col"><b>Зачем</b><p>Это проверка «что стоит за числом». Если почти все случаи дают одно-два слова, отличие связано с лексикой текста, а не с манерой автора.</p></div></aside><!--/EXPLAIN-->
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Буквы ѣ, і, ѳ</div><div class="ex-col"><b>Простыми словами</b><p>Тексты в СМАЛТ набраны в дореформенной орфографии, и мы её не меняли: ѣ, і, ѳ считаются отдельными буквами. Единственная правка — латинская i, которую наборщики ставили вместо і, заменена на кириллическую.</p></div><div class="ex-col"><b>Зачем</b><p>Если тихо заменить ѣ на е, мы изменим сами данные. А латинская i в части текстов дала бы ложное «авторское» различие, которое на деле зависит от наборщика.</p></div></aside><!--/EXPLAIN-->
+  </section>
+
+  <section id="compare">
+    <header>
+      <div class="eyebrow">Сравнение</div>
+      <h2>Где два автора расходятся</h2>
+      <p>Разность P<sub>A</sub> − P<sub>B</sub> на одном алфавите. Красное — переход вероятнее у первого автора, синее — у второго.
+        Строки, где у кого-то меньше <span id="thr1"></span> переходов, заштрихованы и не сравниваются.</p>
+    </header>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Разностная карта</div><div class="ex-col"><b>Простыми словами</b><p>Из таблицы одного автора вычли таблицу другого. Красная клетка — переход чаще у первого автора, синяя — у второго, серая — одинаково.</p></div><div class="ex-col"><b>Зачем</b><p>Так видно, где именно авторы расходятся, а не только что они «чем-то отличаются». Это главный инструмент для сравнения пары.</p></div></aside><!--/EXPLAIN-->
+    <div class="controls">
+      <label class="inline" for="c-a">Автор A <select id="c-a"></select></label>
+      <label class="inline" for="c-b">Автор B <select id="c-b"></select></label>
+    </div>
+    <div class="matrix-grid">
+      <div class="panel" style="display:grid;gap:12px">
+        <div class="legend" id="c-legend"></div>
+        <div class="scroll"><svg class="hm" id="c-svg" role="img" aria-label="Разностная тепловая карта"></svg></div>
+      </div>
+      <aside class="panel detail">
+        <h3>Крупнейшие расхождения</h3>
+        <div class="difflist" id="c-list"></div>
+        <p class="note">Если почти все вхождения перехода дают одно-два слова, различие лексическое: оно говорит о теме текста, а не о «почерке» автора.</p>
+      </aside>
+    </div>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Список расхождений</div><div class="ex-col"><b>Простыми словами</b><p>Восемь самых больших различий между выбранными авторами и слова, которые их дают. Пример: у Пуцыковича «ф→р» чаще, потому что он писал об иностранной политике и постоянно упоминал Францию.</p></div><div class="ex-col"><b>Зачем</b><p>Пример показывает, что многие различия связаны с темой, а не с автором. Отсюда в гипотезе условие «убрать тематическую лексику».</p></div></aside><!--/EXPLAIN-->
+  </section>
+
+  <section id="vc">
+    <header>
+      <div class="eyebrow">Модель B</div>
+      <h2>Гласные и согласные</h2>
+      <p>Буквы сведены к двум состояниям: V (гласная, включая <span class="hist">ѣ</span> и <span class="hist">і</span>)
+        и C (согласная, включая <span class="hist">ѳ</span>). Знаки ъ и ь разрывают цепочку.
+        Точка — модель автора, серая полоса — межквартильный размах по его отдельным текстам.</p>
+    </header>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Модель «гласная / согласная»</div><div class="ex-col"><b>Простыми словами</b><p>Каждую букву заменили на «гласная» или «согласная» и посчитали четыре вероятности: как часто за гласной идёт гласная, за гласной согласная и так далее. Так Марков в 1913 году разбирал «Евгения Онегина».</p></div><div class="ex-col"><b>Зачем</b><p>Проверяем, видна ли разница между авторами уже на самом грубом уровне. Ответ — почти нет, и это тоже результат: двух состояний мало, нужна буквенная модель или сложнее.</p></div></aside><!--/EXPLAIN-->
+    <div class="controls">
+      <div class="seg" id="vc-variant">
+        <button type="button" data-v="full" aria-pressed="true">Все тексты</button>
+        <button type="button" data-v="balanced" aria-pressed="false">Равные выборки</button>
+      </div>
+      <span class="note" id="vc-note"></span>
+    </div>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Все тексты и равные выборки</div><div class="ex-col"><b>Простыми словами</b><p>«Все тексты» — модель по всему корпусу автора. «Равные выборки» — у каждого автора берётся одинаковый объём, около 72 тысяч букв, из случайных, но воспроизводимых кусков (seed 42).</p></div><div class="ex-col"><b>Зачем</b><p>Чтобы большой объём Достоевского не давал ему преимущества. Если вывод сохраняется на равных выборках, он не объясняется разницей в объёме.</p></div></aside><!--/EXPLAIN-->
+    <div class="panel"><div class="vc-grid" id="vc-grid"></div></div>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Серые полосы</div><div class="ex-col"><b>Простыми словами</b><p>Полоса показывает, как та же вероятность меняется от текста к тексту одного автора (средняя половина его текстов).</p></div><div class="ex-col"><b>Зачем</b><p>Если различие между авторами меньше, чем разброс внутри одного автора, это не авторский признак. Здесь полосы почти всегда перекрываются.</p></div></aside><!--/EXPLAIN-->
+    <p class="note prose">Различия между авторами здесь в третьем знаке, а полосы разброса по текстам почти всегда перекрываются.
+      Двух состояний мало, чтобы различать авторов.</p>
+  </section>
+
+  <section id="within">
+    <header>
+      <div class="eyebrow">Проверка</div>
+      <h2>Авторы различаются сильнее, чем их собственные тексты?</h2>
+      <p>Тексты каждого автора делятся на две группы произведений. Из каждой группы берётся выборка одинакового объёма.
+        Цветная точка — расстояние между двумя группами одного автора, кружки — расстояния до других авторов.
+        Если цветная точка левее всех кружков, автор отделяется от остальных.</p>
+    </header>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Проверка «внутри и между»</div><div class="ex-col"><b>Простыми словами</b><p>Тексты автора делим на две кучки разных произведений и измеряем, насколько похожи их таблицы. Потом сравниваем кучку с текстами другого автора. Если свои кучки похожи сильнее, чем чужой автор, автор «узнаётся». Повторяем 20 раз с разным делением.</p></div><div class="ex-col"><b>Зачем</b><p>Это прямая проверка гипотезы. Итог: у 6 из 7 авторов свои тексты ближе, но запас небольшой, а у Щебальского разные его статьи различаются сильнее, чем разные авторы.</p></div></aside><!--/EXPLAIN-->
+    <div class="panel scroll"><svg id="wb-svg" role="img" aria-label="Расстояния внутри автора и между авторами" style="display:block;width:100%;min-width:560px;height:auto"></svg></div>
+    <p class="note prose" id="wb-note"></p>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Что такое расстояние D</div><div class="ex-col"><b>Простыми словами</b><p>Одно число от 0 до 1. 0 — таблицы совпадают. Грубо говоря, D показывает, какую долю переходов пришлось бы «переложить» в другие клетки, чтобы одна таблица стала другой. Частые буквы весят больше редких.</p></div><div class="ex-col"><b>Зачем</b><p>Одно число вместо 1296 клеток позволяет сравнивать много пар сразу. Сравнивать D можно только при одинаковом объёме выборок: на маленьких выборках оно больше из-за случайного шума.</p></div></aside><!--/EXPLAIN-->
+  </section>
+
+  <section id="probe">
+    <header>
+      <div class="eyebrow">Пробно</div>
+      <h2>Угадывание автора по Хмелёву</h2>
+      <p>Каждый текст убирается из корпуса и относится к автору, чья буквенная цепь даёт ему наибольшее правдоподобие.
+        Это быстрая проверка, а не оценка метода: тестовой выборки нет, объёмы авторов несопоставимы.</p>
+    </header>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Угадывание по Хмелёву</div><div class="ex-col"><b>Простыми словами</b><p>Каждый текст по очереди прячем, строим таблицы авторов без него и спрашиваем: чья таблица лучше всего «предсказывает» буквы этого текста? Это метод Хмелёва 2000 года.</p></div><div class="ex-col"><b>Зачем</b><p>Быстро проверить, есть ли у моделей сила различать авторов. 78 % верных ответов против 46 % у наивного «всегда Достоевский» — сигнал есть. Но это не точность метода: слишком мало авторов и текстов, и объёмы неравны.</p></div></aside><!--/EXPLAIN-->
+    <div class="two">
+      <div class="panel scroll"><svg id="pr-svg" role="img" aria-label="Матрица ошибок пробной атрибуции" style="display:block;width:100%;min-width:420px;height:auto"></svg></div>
+      <div class="panel detail">
+        <div class="pair num" id="pr-acc"></div>
+        <p class="note" id="pr-base"></p>
+        <h3>Ошибки</h3>
+        <div class="difflist" id="pr-errors"></div>
+      </div>
+    </div>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Матрица ошибок</div><div class="ex-col"><b>Простыми словами</b><p>Строка — настоящий автор по СМАЛТ, столбец — ответ модели. Числа на диагонали — попадания, остальное — ошибки.</p></div><div class="ex-col"><b>Зачем</b><p>Видно, кого с кем путают. Мещерского — с Достоевским (один журнал «Гражданин»), «Иностранные события» Достоевского — со Щебальским и Пуцыковичем (одна тема). Ещё один довод, что тема влияет сильно.</p></div></aside><!--/EXPLAIN-->
+  </section>
+
+  <section id="gen">
+    <header>
+      <div class="eyebrow">Иллюстрация</div>
+      <h2>Слова, которые мог бы написать автор</h2>
+      <p>Цепь автора, пущенная в обратную сторону: первая буква выбирается по частоте начал слов, каждая следующая — по матрице переходов,
+        слово обрывается с вероятностью, с которой автор заканчивает слово на этой букве. Это иллюстрация, которая показывает, что именно
+        «знает» модель первого порядка.</p>
+    </header>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Генератор слов</div><div class="ex-col"><b>Простыми словами</b><p>Модель сама «пишет»: выбирает первую букву, потом каждую следующую по вероятностям автора, и в какой-то момент обрывает слово.</p></div><div class="ex-col"><b>Зачем</b><p>Наглядно показывает предел модели: слова звучат по-русски, с ѣ и ъ на конце, но смысла в них нет. Модель знает только пары букв. Поэтому дальше в плане — модели по словам и частям речи.</p></div></aside><!--/EXPLAIN-->
+    <div class="controls" id="g-authors"></div>
+    <div class="panel" style="display:grid;gap:14px">
+      <div class="gen-out" id="g-out" aria-live="polite"></div>
+      <div class="controls"><button type="button" class="primary" id="g-btn">Ещё слова</button><span class="note">Псевдослова случайны; первый набор фиксирован (seed 42).</span></div>
+    </div>
+  </section>
+
+  <section id="findings">
+    <header>
+      <h2>Итог</h2>
+    </header>
+    <ol class="findings" id="f-list"></ol>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Выводы</div><div class="ex-col"><b>Простыми словами</b><p>Четыре коротких наблюдения по всей работе, с числами из расчёта.</p></div><div class="ex-col"><b>Зачем</b><p>Здесь коротко собраны результаты всех разделов.</p></div></aside><!--/EXPLAIN-->
+    <div class="hypo" id="hypothesis">
+      <div class="eyebrow">Рабочая гипотеза</div>
+      <p class="hypo-text"><span class="q">«</span>Буквенные цепи Маркова первого порядка различают авторов одного жанра сильнее, чем различаются произведения одного автора, если убрать из текстов тематическую лексику.<span class="q">»</span></p>
+      <div class="hypo-status">
+        <span class="pill">Сейчас: подтверждается частично</span>
+        <span id="hypo-evidence"></span>
+      </div>
+      <div class="hypo-steps">
+        <div><b>Разделить по произведениям</b><span>обучение и проверка на разных текстах, а не на фрагментах одного</span></div>
+        <div><b>Сравнить в одном издании</b><span>«Время» 1861–1863 и «Гражданин» 1873–1874, включая общую рубрику «Иностранные события»</span></div>
+        <div><b>Убрать тематическую лексику</b><span>имена собственные и иностранные слова, затем повторить сравнение</span></div>
+      </div>
+    </div>
+    <!--EXPLAIN--><aside class="explain"><div class="ex-topic">Гипотеза и три шага</div><div class="ex-col"><b>Простыми словами</b><p>Предположение: если убрать из текстов слова, связанные с темой, буквенные таблицы всё равно будут отличать авторов. Сейчас это видно лишь частично. Три шага — как это честно проверить.</p></div><div class="ex-col"><b>Зачем</b><p>Цель этапа — получить данные, по которым можно сформулировать исследовательскую гипотезу. Это она. Три шага — план следующего этапа.</p></div></aside><!--/EXPLAIN-->
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+<canvas id="fx-trail" aria-hidden="true"></canvas>
+<div id="tip" hidden></div>
+<!--EXPLAIN--><button type="button" id="ex-toggle" aria-pressed="true">Скрыть пояснения</button>
+<script>
+(function () {
+  const b = document.getElementById("ex-toggle");
+  b.addEventListener("click", () => {
+    const off = document.body.classList.toggle("no-explain");
+    b.textContent = off ? "Показать пояснения" : "Скрыть пояснения";
+    b.setAttribute("aria-pressed", String(!off));
+  });
+})();
+</script><!--/EXPLAIN-->
+
+<script>
+const D = /*__DATA__*/null;
+(function () {
+  "use strict";
+  const S = D.states, K = S.length, A = D.authors, THR = D.threshold;
+  const byKey = Object.fromEntries(A.map((a, i) => [a.key, Object.assign(a, { idx: i })]));
+  const NS = "http://www.w3.org/2000/svg";
+  const fmt = n => Math.round(n).toLocaleString("ru-RU");
+  const f3 = x => x.toFixed(3).replace(".", ",");
+  const f2 = x => x.toFixed(2).replace(".", ",");
+  const $ = id => document.getElementById(id);
+  const el = (tag, attrs = {}, text) => {
+    const e = document.createElementNS(NS, tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+    if (text !== undefined) e.textContent = text;
+    return e;
+  };
+  const h = (tag, attrs = {}, html) => {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+    if (html !== undefined) e.innerHTML = html;
+    return e;
+  };
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // derived per-author numbers
+  for (const a of A) {
+    a.row = a.N.map(r => r.reduce((s, v) => s + v, 0));
+    a.P = a.N.map((r, i) => r.map(v => a.row[i] > 0 ? v / a.row[i] : null));
+    a.pairs = a.row.reduce((s, v) => s + v, 0);
+  }
+  const NMAX = Math.max(...A.map(a => Math.max(...a.N.flat())));
+
+  // theme colours
+  let C = {};
+  function hex(c) { c = c.trim(); if (c.length === 4) c = "#" + [...c.slice(1)].map(x => x + x).join(""); return [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)); }
+  function mix(a, b, t) { return "rgb(" + a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(",") + ")"; }
+  function readTheme() {
+    const cs = getComputedStyle(document.documentElement);
+    const g = n => cs.getPropertyValue(n);
+    C = { s0: hex(g("--seq-0")), s1: hex(g("--seq-1")), s2: hex(g("--seq-2")), dn: hex(g("--div-neg")), dm: hex(g("--div-mid")),
+          dp: hex(g("--div-pos")), hatch: g("--hatch").trim(), ink: g("--ink").trim(), muted: g("--muted").trim(),
+          rule: g("--rule").trim(), hist: g("--hist").trim(), panel: g("--panel").trim(),
+          accent: g("--accent").trim(), ink2: g("--ink-2").trim(),
+          series: [1, 2, 3, 4, 5, 6, 7].map(i => g("--s" + i).trim()) };
+  }
+  const seq = t => (t = Math.max(0, Math.min(1, t)), t < 0.5 ? mix(C.s0, C.s1, t * 2) : mix(C.s1, C.s2, (t - 0.5) * 2));
+  const div = t => (t = Math.max(-1, Math.min(1, t)), t >= 0 ? mix(C.dm, C.dp, t) : mix(C.dm, C.dn, -t));
+  const colorOf = k => C.series[byKey[k].idx];
+
+  // tooltip
+  const tip = $("tip");
+  document.addEventListener("pointermove", e => {
+    const t = e.target.closest && e.target.closest("[data-tip]");
+    if (!t) { tip.hidden = true; return; }
+    tip.innerHTML = t.getAttribute("data-tip");
+    tip.hidden = false;
+    const w = tip.offsetWidth, hh = tip.offsetHeight;
+    let x = e.clientX + 14, y = e.clientY + 14;
+    if (x + w > innerWidth - 8) x = e.clientX - w - 14;
+    if (y + hh > innerHeight - 8) y = e.clientY - hh - 14;
+    tip.style.left = x + "px"; tip.style.top = y + "px";
+  });
+  document.addEventListener("pointerleave", () => { tip.hidden = true; });
+
+  // ---------- facts & corpus ----------
+  const totalTexts = A.reduce((s, a) => s + a.n_texts, 0);
+  const totalPairs = A.reduce((s, a) => s + a.letter_pairs, 0);
+  $("facts").innerHTML = [
+    [totalTexts, "текстов"], [A.length, "авторов"], [K, "букв в алфавите"],
+    [(totalPairs / 1e6).toFixed(1).replace(".", ",") + " млн", "пар букв"]
+  ].map(([n, l]) => `<span><b>${n}</b>${l}</span>`).join("");
+
+  function corpusTable() {
+    const t = $("corpus-table");
+    t.innerHTML = `<thead><tr><th>Автор</th><th class="r">Текстов</th><th>Годы</th><th class="r">Букв</th><th class="r">Пар букв</th><th>Издания</th></tr></thead>`;
+    const tb = h("tbody");
+    for (const a of A) {
+      const tr = h("tr", { tabindex: "0" });
+      tr.innerHTML = `<td><span class="who"><span class="dot" style="background:${colorOf(a.key)}"></span>${esc(a.label)}</span></td>
+        <td class="r num">${a.n_texts}</td><td class="num">${esc(a.years)}</td><td class="r num">${fmt(a.letters)}</td>
+        <td class="r num">${fmt(a.letter_pairs)}</td><td class="mags">${esc(a.magazines)}</td>`;
+      const go = () => { setAuthor(a.key); $("matrix").scrollIntoView({ behavior: "smooth", block: "start" }); };
+      tr.addEventListener("click", go);
+      tr.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+      tb.appendChild(tr);
+    }
+    t.appendChild(tb);
+  }
+
+  // ---------- heatmap ----------
+  const CELL = 19, ML = 26, MT = 26;
+  function heatmap(svg, value, color, maskRow, onCell, tipFn, sel) {
+    svg.innerHTML = "";
+    const W = ML + K * CELL + 4, H = MT + K * CELL + 4;
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    const defs = el("defs");
+    const pat = el("pattern", { id: svg.id + "-hatch", width: 5, height: 5, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" });
+    pat.appendChild(el("rect", { width: 5, height: 5, fill: C.panel }));
+    pat.appendChild(el("line", { x1: 0, y1: 0, x2: 0, y2: 5, stroke: C.hatch, "stroke-width": 2 }));
+    defs.appendChild(pat); svg.appendChild(defs);
+    for (let i = 0; i < K; i++) {
+      const hist = D.historical.includes(S[i]);
+      const lab = { "font-size": 12, "text-anchor": "middle" };
+      const tx = el("text", Object.assign({ x: ML + i * CELL + CELL / 2, y: MT - 9 }, lab), S[i]);
+      const ty = el("text", Object.assign({ x: ML - 12, y: MT + i * CELL + CELL / 2 + 4 }, lab), S[i]);
+      for (const t of [tx, ty]) if (hist) { t.style.fill = C.hist; t.style.fontWeight = 700; }
+      if (maskRow(i)) { ty.style.fontStyle = "italic"; ty.style.fill = C.muted; }
+      svg.appendChild(tx); svg.appendChild(ty);
+    }
+    const g = el("g");
+    for (let i = 0; i < K; i++) {
+      if (maskRow(i)) {
+        g.appendChild(el("rect", { x: ML, y: MT + i * CELL, width: K * CELL, height: CELL, fill: `url(#${svg.id}-hatch)` }));
+        continue;
+      }
+      for (let j = 0; j < K; j++) {
+        const v = value(i, j);
+        const r = el("rect", { x: ML + j * CELL + 0.5, y: MT + i * CELL + 0.5, width: CELL - 1, height: CELL - 1, rx: 2,
+                               fill: v === null ? C.panel : color(v), "data-i": i, "data-j": j, "data-tip": tipFn(i, j) });
+        g.appendChild(r);
+      }
+    }
+    svg.appendChild(g);
+    const hl = el("rect", { width: CELL, height: CELL, fill: "none", stroke: C.ink, "stroke-width": 2, rx: 3, visibility: "hidden", "pointer-events": "none" });
+    const hlRow = el("rect", { x: ML, height: CELL, width: K * CELL, fill: "none", stroke: C.ink, "stroke-opacity": 0.25, "pointer-events": "none", visibility: "hidden" });
+    svg.appendChild(hlRow); svg.appendChild(hl);
+    const mark = (i, j) => {
+      hl.setAttribute("x", ML + j * CELL); hl.setAttribute("y", MT + i * CELL); hl.setAttribute("visibility", "visible");
+      hlRow.setAttribute("y", MT + i * CELL); hlRow.setAttribute("visibility", "visible");
+    };
+    const handler = e => {
+      const r = e.target.closest("rect[data-i]");
+      if (!r) return;
+      const i = +r.dataset.i, j = +r.dataset.j;
+      mark(i, j); onCell(i, j);
+    };
+    svg.onpointerover = handler; svg.onclick = handler;
+    if (sel) mark(sel[0], sel[1]);
+    return mark;
+  }
+
+  // ---------- section: matrix ----------
+  let mAuthor = A[0].key, mMetric = "P", mSel = [S.indexOf("г"), S.indexOf("о")];
+  function chips(container, onPick, current) {
+    container.innerHTML = "";
+    for (const a of A) {
+      const b = h("button", { type: "button", class: "chip", "aria-pressed": String(a.key === current), "data-k": a.key },
+        `<span class="dot" style="background:${colorOf(a.key)}"></span>${esc(a.label)}`);
+      b.addEventListener("click", () => onPick(a.key));
+      container.appendChild(b);
+    }
+  }
+  function wordsHtml(a, i, j) {
+    const w = a.words[i + "," + j];
+    if (!w || !w.length) return `<span class="note">нет вхождений</span>`;
+    const tot = a.N[i][j];
+    const share = w.reduce((s, x) => s + x[1], 0) / tot;
+    return `<div class="words">${w.map(([s, c]) => `<span class="word">${esc(s)}<small>${fmt(c)}</small></span>`).join("")}</div>
+      <p class="note">Эти слова дают ${Math.round(share * 100)}% всех вхождений.</p>`;
+  }
+  function showDetail(i, j) {
+    mSel = [i, j];
+    const a = byKey[mAuthor];
+    const p = a.P[i][j];
+    const low = a.row[i] < THR;
+    $("m-detail").innerHTML = `
+      <div class="eyebrow">${esc(a.label)}</div>
+      <div class="pair">${S[i]}<span>→</span>${S[j]}</div>
+      <dl class="kv">
+        <dt>P(${S[j]} | ${S[i]})</dt><dd>${p === null ? "не оценена" : f3(p)}</dd>
+        <dt>переходов</dt><dd>${fmt(a.N[i][j])} из ${fmt(a.row[i])}</dd>
+        <dt>начинают слово</dt><dd>${fmt(a.starts[i])} раз на «${S[i]}»</dd>
+      </dl>
+      ${low ? `<p class="note">Из «${S[i]}» меньше ${THR} переходов: строка ненадёжна.</p>` : ""}
+      <div class="eyebrow">Слова с этим переходом</div>
+      ${wordsHtml(a, i, j)}`;
+  }
+  function drawMatrix() {
+    const a = byKey[mAuthor];
+    chips($("m-authors"), k => setAuthor(k), mAuthor);
+    for (const b of $("m-metric").children) b.setAttribute("aria-pressed", String(b.dataset.v === mMetric));
+    const value = mMetric === "P" ? (i, j) => a.P[i][j] : (i, j) => a.N[i][j];
+    const color = mMetric === "P" ? v => seq(Math.sqrt(v)) : v => v === 0 ? C.panel : seq(Math.log1p(v) / Math.log1p(NMAX));
+    heatmap($("m-svg"), value, color, i => a.row[i] === 0, showDetail,
+      (i, j) => `<b>${S[i]} → ${S[j]}</b><br>P = ${a.P[i][j] === null ? "—" : f3(a.P[i][j])}<br>N = ${fmt(a.N[i][j])} из ${fmt(a.row[i])}`, mSel);
+    const stops = [0, 0.25, 0.5, 0.75, 1].map(t => seq(t)).join(",");
+    $("m-legend").innerHTML = mMetric === "P"
+      ? `<span class="num">0</span><span class="ramp" style="background:linear-gradient(90deg,${stops})"></span><span class="num">1</span><span>шкала √P</span><span class="sw-hatch"></span><span>нет переходов</span>`
+      : `<span class="num">1</span><span class="ramp" style="background:linear-gradient(90deg,${stops})"></span><span class="num">${fmt(NMAX)}</span><span>лог. шкала, общая для всех</span>`;
+    showDetail(mSel[0], mSel[1]);
+  }
+  function setAuthor(k) { mAuthor = k; drawMatrix(); drawGen(true); }
+  $("m-metric").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { mMetric = b.dataset.v; drawMatrix(); } });
+
+  // ---------- section: compare ----------
+  let cA = "dostoevsky_fm", cB = "putsykovich";
+  const LIM = 0.15;
+  for (const id of ["c-a", "c-b"]) {
+    const s = $(id);
+    for (const a of A) s.appendChild(h("option", { value: a.key }, esc(a.label)));
+  }
+  $("c-a").value = cA; $("c-b").value = cB;
+  $("c-a").addEventListener("change", e => { cA = e.target.value; drawCompare(); });
+  $("c-b").addEventListener("change", e => { cB = e.target.value; drawCompare(); });
+  function topWords(a, i, j, n) {
+    const w = a.words[i + "," + j] || [];
+    return w.slice(0, n).map(x => x[0]).join(", ");
+  }
+  function drawCompare() {
+    const a = byKey[cA], b = byKey[cB];
+    const mask = i => a.row[i] < THR || b.row[i] < THR;
+    const d = (i, j) => (a.P[i][j] ?? 0) - (b.P[i][j] ?? 0);
+    const list = [];
+    for (let i = 0; i < K; i++) if (!mask(i)) for (let j = 0; j < K; j++) list.push([Math.abs(d(i, j)), i, j]);
+    list.sort((x, y) => y[0] - x[0]);
+    let mark;
+    const pick = (i, j) => { if (mark) mark(i, j); };
+    mark = heatmap($("c-svg"), (i, j) => cA === cB ? 0 : d(i, j), v => div(v / LIM), mask, () => {},
+      (i, j) => `<b>${S[i]} → ${S[j]}</b><br>${esc(a.label)}: ${f3(a.P[i][j] ?? 0)} (${fmt(a.N[i][j])} из ${fmt(a.row[i])})<br>${esc(b.label)}: ${f3(b.P[i][j] ?? 0)} (${fmt(b.N[i][j])} из ${fmt(b.row[i])})<br>ΔP = ${(d(i, j) >= 0 ? "+" : "") + f3(d(i, j))}`);
+    $("c-legend").innerHTML = `<span class="num">−${f2(LIM)}</span><span class="ramp" style="background:linear-gradient(90deg,${div(-1)},${div(-0.5)},${div(0)},${div(0.5)},${div(1)})"></span><span class="num">+${f2(LIM)}</span>
+      <span>синее — чаще у автора ${esc(b.label)}, красное — у автора ${esc(a.label)}</span><span class="sw-hatch"></span><span>не сравнивается</span>`;
+    const box = $("c-list");
+    box.innerHTML = "";
+    if (cA === cB) { box.innerHTML = `<p class="note">Выберите двух разных авторов.</p>`; return; }
+    for (const [, i, j] of list.slice(0, 8)) {
+      const dv = d(i, j);
+      const row = h("div", { class: "diffrow", tabindex: "0" },
+        `<span class="bg">${S[i]}→${S[j]}</span>
+         <span class="ws"><span style="color:${colorOf(cA)}">●</span> ${esc(topWords(a, i, j, 2)) || "—"}<br><span style="color:${colorOf(cB)}">●</span> ${esc(topWords(b, i, j, 2)) || "—"}</span>
+         <span class="num" style="color:${dv > 0 ? "var(--div-pos)" : "var(--div-neg)"}">${(dv > 0 ? "+" : "") + f3(dv)}</span>`);
+      row.addEventListener("click", () => pick(i, j));
+      row.addEventListener("pointerenter", () => pick(i, j));
+      box.appendChild(row);
+    }
+  }
+
+  // ---------- section: V/C ----------
+  let vcVariant = "full";
+  const VC_M = [["VV", "P(V→V)"], ["VC", "P(V→C)"], ["CV", "P(C→V)"], ["CC", "P(C→C)"]];
+  function vcP(a, v, m) {
+    const n = a.vc[v]; const from = m[0];
+    const tot = n[from + "V"] + n[from + "C"];
+    return { p: n[m] / tot, n: n[m], tot };
+  }
+  function drawVC() {
+    for (const b of $("vc-variant").children) b.setAttribute("aria-pressed", String(b.dataset.v === vcVariant));
+    $("vc-note").textContent = vcVariant === "balanced" ? `по ≈${fmt(D.balanced_letters)} букв на автора, seed ${D.seed}` : "все отобранные тексты каждого автора";
+    const grid = $("vc-grid"); grid.innerHTML = "";
+    const rowH = 30, W = 260, ML0 = 8, MR = 12, MT0 = 8, H = MT0 + A.length * rowH + 26;
+    for (const [m, title] of VC_M) {
+      const vals = A.map(a => vcP(a, vcVariant, m));
+      const ext = A.flatMap(a => a.vc_iqr[m] || []).concat(vals.map(v => v.p));
+      let lo = Math.min(...ext), hi = Math.max(...ext);
+      const pad = (hi - lo) * 0.12 || 0.01; lo -= pad; hi += pad;
+      const x = v => ML0 + (v - lo) / (hi - lo) * (W - ML0 - MR);
+      const wrapD = h("div");
+      wrapD.appendChild(h("h3", {}, title));
+      const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": title });
+      const ticks = 4;
+      for (let t = 0; t <= ticks; t++) {
+        const v = lo + (hi - lo) * t / ticks;
+        svg.appendChild(el("line", { x1: x(v), x2: x(v), y1: MT0, y2: H - 22, stroke: C.rule }));
+        svg.appendChild(el("text", { x: x(v), y: H - 6, "font-size": 10, "text-anchor": "middle" }, f3(v)));
+      }
+      A.forEach((a, k) => {
+        const y = MT0 + k * rowH + rowH / 2;
+        const q = a.vc_iqr[m];
+        if (q) svg.appendChild(el("line", { x1: x(q[0]), x2: x(q[1]), y1: y, y2: y, stroke: C.hatch, "stroke-width": 6, "stroke-linecap": "round" }));
+        const v = vals[k];
+        svg.appendChild(el("circle", { cx: x(v.p), cy: y, r: 6, fill: colorOf(a.key), stroke: C.panel, "stroke-width": 2,
+          "data-tip": `<b>${esc(a.label)}</b><br>${title} = ${f3(v.p)}<br>${fmt(v.n)} из ${fmt(v.tot)} переходов${q ? `<br>по текстам: ${f3(q[0])}–${f3(q[1])}` : ""}` }));
+        svg.appendChild(el("text", { x: x(v.p), y: y - 9, "font-size": 9.5, "text-anchor": "middle" }, f3(v.p)));
+      });
+      wrapD.appendChild(svg);
+      grid.appendChild(wrapD);
+    }
+    const leg = h("div", { class: "legend", style: "grid-column:1/-1" },
+      A.map(a => `<span style="display:inline-flex;gap:6px;align-items:center"><span class="dot" style="background:${colorOf(a.key)}"></span>${esc(a.label)}</span>`).join("") +
+      `<span style="display:inline-flex;gap:6px;align-items:center"><span style="width:18px;height:6px;border-radius:3px;background:${C.hatch}"></span>межквартильный размах по текстам</span>`);
+    grid.appendChild(leg);
+  }
+  $("vc-variant").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { vcVariant = b.dataset.v; drawVC(); } });
+
+  // ---------- section: within/between ----------
+  function drawWB() {
+    const svg = $("wb-svg"); svg.innerHTML = "";
+    const within = Object.fromEntries(D.within_between.filter(r => r.kind === "внутри").map(r => [r.a, r]));
+    const between = D.within_between.filter(r => r.kind === "между");
+    const ML1 = 170, MR = 24, rowH = 46, MT1 = 14, W = 900, H = MT1 + A.length * rowH + 40;
+    const xmax = Math.ceil(Math.max(...D.within_between.map(r => r.max)) * 50) / 50;
+    const x = v => ML1 + v / xmax * (W - ML1 - MR);
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    for (let v = 0; v <= xmax + 1e-9; v += 0.02) {
+      svg.appendChild(el("line", { x1: x(v), x2: x(v), y1: MT1, y2: H - 30, stroke: C.rule }));
+      svg.appendChild(el("text", { x: x(v), y: H - 12, "font-size": 12, "text-anchor": "middle" }, f2(v)));
+    }
+    let separated = 0;
+    A.forEach((a, k) => {
+      const y = MT1 + k * rowH + rowH / 2;
+      svg.appendChild(el("text", { x: ML1 - 14, y: y + 4, "font-size": 14, "text-anchor": "end" }, a.label));
+      const others = between.filter(r => r.a === a.key || r.b === a.key).map(r => ({ v: r.mean, o: r.a === a.key ? r.b : r.a }));
+      const w = within[a.key];
+      if (others.every(o => o.v > w.mean)) separated++;
+      const xs = others.map(o => o.v);
+      svg.appendChild(el("line", { x1: x(Math.min(...xs)), x2: x(Math.max(...xs)), y1: y, y2: y, stroke: C.rule, "stroke-width": 1.5 }));
+      svg.appendChild(el("line", { x1: x(w.min), x2: x(w.max), y1: y, y2: y, stroke: colorOf(a.key), "stroke-opacity": 0.45, "stroke-width": 6, "stroke-linecap": "round" }));
+      for (const o of others) {
+        svg.appendChild(el("circle", { cx: x(o.v), cy: y, r: 6, fill: C.panel, stroke: C.muted, "stroke-width": 1.6,
+          "data-tip": `${esc(a.label)} ↔ ${esc(byKey[o.o].label)}<br>D = ${f3(o.v)}` }));
+      }
+      svg.appendChild(el("circle", { cx: x(w.mean), cy: y, r: 7.5, fill: colorOf(a.key), stroke: C.panel, "stroke-width": 2,
+        "data-tip": `<b>${esc(a.label)}</b>: две группы его произведений<br>D = ${f3(w.mean)} (${f3(w.min)}–${f3(w.max)} по повторам)` }));
+    });
+    svg.appendChild(el("text", { x: W - MR, y: H - 30 + 0, "font-size": 11, "text-anchor": "end", dy: -4 }, "расстояние между буквенными моделями →"));
+    $("wb-note").textContent = `У ${separated} из ${A.length} авторов цветная точка левее всех кружков. Выборки по ≈${fmt(D.within_letters)} букв, ${D.within_repeats} повторов с разными разбиениями. ` +
+      `Расстояние — взвешенная разность строк матриц P (0 — одинаковые модели).`;
+  }
+
+  // ---------- section: probe ----------
+  function drawProbe() {
+    const svg = $("pr-svg"); svg.innerHTML = "";
+    const keys = A.map(a => a.key);
+    const M = keys.map(t => keys.map(p => D.probe.filter(r => r.true === t && r.pred === p).length));
+    const short = a => a.label.replace(/^(.)\. (.)\. /, "$1. $2. ");
+    const CS = 40, ML2 = 150, MT2 = 112, W = ML2 + keys.length * CS + 10, H = MT2 + keys.length * CS + 10;
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    keys.forEach((p, j) => {
+      const t = el("text", { x: 0, y: 0, "font-size": 11.5, transform: `translate(${ML2 + j * CS + CS / 2 + 4},${MT2 - 8}) rotate(-50)` }, byKey[p].label);
+      svg.appendChild(t);
+    });
+    svg.appendChild(el("text", { x: ML2, y: 12, "font-size": 11 }, "отнесён к →"));
+    keys.forEach((t, i) => {
+      svg.appendChild(el("text", { x: ML2 - 10, y: MT2 + i * CS + CS / 2 + 4, "font-size": 12, "text-anchor": "end" }, short(byKey[t])));
+      const rowTot = M[i].reduce((s, v) => s + v, 0);
+      keys.forEach((p, j) => {
+        const v = M[i][j];
+        const share = rowTot ? v / rowTot : 0;
+        const fill = v === 0 ? C.panel : (i === j ? seq(0.25 + 0.75 * share) : div(0.25 + 0.75 * share));
+        svg.appendChild(el("rect", { x: ML2 + j * CS + 1, y: MT2 + i * CS + 1, width: CS - 2, height: CS - 2, rx: 3, fill,
+          stroke: i === j ? C.ink : "none", "stroke-opacity": 0.25,
+          "data-tip": `${esc(byKey[t].label)} → ${esc(byKey[p].label)}: ${v} из ${rowTot}` }));
+        if (v) svg.appendChild(el("text", { x: ML2 + j * CS + CS / 2, y: MT2 + i * CS + CS / 2 + 4, "font-size": 12.5, "text-anchor": "middle",
+          style: `fill:${share > 0.55 ? C.panel : C.ink};font-family:var(--f-mono)` }, v));
+      });
+    });
+    const ok = D.probe.filter(r => r.ok).length;
+    const counts = {}; D.probe.forEach(r => counts[r.true] = (counts[r.true] || 0) + 1);
+    const top = Math.max(...Object.values(counts));
+    $("pr-acc").innerHTML = `${ok} из ${D.probe.length}`;
+    $("pr-base").textContent = `верно (${Math.round(100 * ok / D.probe.length)}%). Если всегда называть самого «многотекстового» автора, получится ${Math.round(100 * top / D.probe.length)}%. Строки — автор по СМАЛТ, столбцы — ответ модели; диагональ — попадания.`;
+    const box = $("pr-errors"); box.innerHTML = "";
+    for (const r of D.probe.filter(r => !r.ok)) {
+      box.appendChild(h("div", { class: "diffrow", style: "grid-template-columns:44px 1fr;cursor:default" },
+        `<span class="num note">${esc(r.id)}</span><span><span style="color:${colorOf(r.true)}">●</span> ${esc(byKey[r.true].label)} → <span style="color:${colorOf(r.pred)}">●</span> ${esc(byKey[r.pred].label)}<br><span class="ws">${esc(r.title.slice(0, 80))}</span></span>`));
+    }
+  }
+
+  // ---------- section: generator ----------
+  let gAuthor = A[0].key, gSeed = 42;
+  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function pickIdx(weights, r) { const tot = weights.reduce((s, v) => s + v, 0); let u = r() * tot; for (let i = 0; i < weights.length; i++) { u -= weights[i]; if (u < 0) return i; } return weights.length - 1; }
+  function genWord(a, r) {
+    let i = pickIdx(a.starts, r), w = S[i];
+    for (let step = 0; step < 18; step++) {
+      const go = a.row[i], stop = a.ends[i];
+      if (r() * (go + stop) < stop) break;
+      i = pickIdx(a.N[i], r); w += S[i];
+    }
+    return w;
+  }
+  function drawGen(reset) {
+    if (reset) gSeed = 42;
+    chips($("g-authors"), k => { gAuthor = k; drawGen(true); }, gAuthor);
+    const a = byKey[gAuthor], r = rng(gSeed);
+    const out = [];
+    let guard = 0;
+    while (out.length < 18 && guard++ < 400) { const w = genWord(a, r); if (w.length >= 3) out.push(w); }
+    $("g-out").innerHTML = out.map((w, k) => `<span style="animation-delay:${k * 25}ms">${[...w].map(c => D.historical.includes(c) ? `<span class="hist">${c}</span>` : c).join("")}</span>`).join("");
+  }
+  $("g-btn").addEventListener("click", () => { gSeed = (gSeed * 1103515245 + 12345) >>> 0; drawGen(false); });
+
+  // ---------- findings & footer ----------
+  function drawFindings() {
+    const fm = byKey["dostoevsky_fm"], pu = byKey["putsykovich"];
+    const wb = D.within_between;
+    const within = wb.filter(r => r.kind === "внутри"), between = wb.filter(r => r.kind === "между");
+    const mean = xs => xs.reduce((s, v) => s + v, 0) / xs.length;
+    const sep = A.filter(a => { const w = within.find(r => r.a === a.key).mean; return between.filter(r => r.a === a.key || r.b === a.key).every(r => r.mean > w); }).length;
+    const ci = S.indexOf("ц"), ii = S.indexOf("і");
+    const items = [
+      `Самые частые переходы (т→о, с→т, н→а, м→ъ) почти одинаковы у всех авторов: это свойство языка и орфографии, а не автора.`,
+      `Модель «гласная/согласная» различает авторов слабо: P(C→C) у всех лежит в пределах ${f3(Math.min(...A.map(a => vcP(a, "balanced", "CC").p)))}–${f3(Math.max(...A.map(a => vcP(a, "balanced", "CC").p)))} на равных выборках.`,
+      `Крупные различия отдельных переходов часто дают несколько слов. Например, ц→і: ${f3(fm.P[ci][ii])} у Ф. М. Достоевского и ${f3(pu.P[ci][ii])} у Пуцыковича, а среди слов первые места занимают «${(fm.words[ci + "," + ii] || [[""]])[0][0]}» и «${(pu.words[ci + "," + ii] || [[""]])[0][0]}». Тема текста заметно влияет на буквенную цепь.`,
+      `Две группы произведений одного автора в среднем ближе друг к другу (D ≈ ${f3(mean(within.map(r => r.mean)))}), чем разные авторы (D ≈ ${f3(mean(between.map(r => r.mean)))}); полностью отделяются ${sep} из ${A.length} авторов.`,
+    ];
+    $("f-list").innerHTML = items.map(t => `<li><span>${t}</span></li>`).join("");
+    $("hypo-evidence").textContent = `Полностью отделяются ${sep} из ${A.length} авторов; расстояние между произведениями одного автора ≈ ${f3(mean(within.map(r => r.mean)))}, между авторами ≈ ${f3(mean(between.map(r => r.mean)))}. Различия заметно зависят от темы текстов.`;
+    $("foot").innerHTML = `<span>Источник: дамп СМАЛТ ${esc(D.dump)}; тексты с AUTHOR_VERIFY = 1 и STATUS = 2. Переходы считаются внутри слов; алфавит — ${K} букв дореформенной орфографии.</span>
+      <span>Страница собрана скриптом scripts/build_demo.py из результатов python -m markov.cli (seed ${D.seed}).</span>`;
+    $("thr1").textContent = THR;
+  }
+
+  // ---------- выплывание при прокрутке ----------
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.documentElement.classList.add("js");
+  const seen = new WeakSet();
+  const io = new IntersectionObserver(entries => {
+    for (const e of entries) {
+      const t = e.target;
+      if (e.isIntersecting) {
+        t.classList.remove("above");
+        t.classList.add("in");
+      } else {
+        // ушёл вверх — при возвращении выплывет сверху, ушёл вниз — снизу
+        t.classList.remove("in");
+        t.classList.toggle("above", e.boundingClientRect.top < 0);
+      }
+    }
+  }, { threshold: 0.06, rootMargin: "0px 0px -4% 0px" });
+  const REVEAL = ["header.top > *", "section > header", "section > .controls", "section > .panel", "section > .matrix-grid > *",
+                  "section > .two > *", "section > p", "section > h3", "section > ul", ".findings li", "section > .hypo", "section > .explain", ".hypo-steps > *", "footer"].join(",");
+  function registerReveal() {
+    const groups = new Map();
+    for (const t of document.querySelectorAll(REVEAL)) {
+      if (seen.has(t)) continue;
+      seen.add(t);
+      const k = groups.get(t.parentElement) || 0;
+      groups.set(t.parentElement, k + 1);
+      t.style.setProperty("--d", Math.min(k * 80, 400) + "ms");
+      t.classList.add("reveal");
+      io.observe(t);
+    }
+  }
+
+  // ---------- частицы-буквы снизу вверх и след курсора ----------
+  const freq = S.map((_, i) => A.reduce((s, a) => s + a.row[i] + a.ends[i], 0));
+  const pcv = $("fx-particles"), pctx = pcv.getContext("2d");
+  const tcv = $("fx-trail"), tctx = tcv.getContext("2d");
+  let VW = 0, VH = 0, DPR = 1;
+  const parts = [];
+  const mouse = { x: -1e4, y: -1e4 };
+  const trail = [];
+  const rand = (a, b) => a + Math.random() * (b - a);
+  function newParticle(anywhere) {
+    const letter = Math.random() < 0.55;
+    return {
+      x: rand(0, VW), y: anywhere ? rand(0, VH) : VH + rand(10, 60),
+      vy: rand(14, 42) * (letter ? 1 : 1.4), phase: rand(0, 6.28), sway: rand(6, 22),
+      ch: letter ? S[pickIdx(freq, Math.random)] : null,
+      size: letter ? rand(11, 26) : rand(1, 2.6), a: letter ? rand(0.16, 0.40) : rand(0.3, 0.7),
+      rot: rand(-0.4, 0.4), vr: rand(-0.25, 0.25), ox: 0, oy: 0,
+    };
+  }
+  function resizeFx() {
+    DPR = Math.min(devicePixelRatio || 1, 2);
+    VW = innerWidth; VH = innerHeight;
+    for (const c of [pcv, tcv]) { c.width = VW * DPR; c.height = VH * DPR; }
+    pctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    tctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    const want = Math.max(28, Math.min(90, Math.round(VW * VH / 20000)));
+    while (parts.length < want) parts.push(newParticle(true));
+    parts.length = want;
+  }
+  function rgba(color, a) {
+    const [r, g, b] = hex(color.startsWith("#") ? color : "#000000");
+    return `rgba(${r},${g},${b},${a})`;
+  }
+  addEventListener("pointermove", e => {
+    if (e.pointerType === "touch") return;
+    mouse.x = e.clientX; mouse.y = e.clientY;
+    trail.push({ x: e.clientX, y: e.clientY, t: performance.now() });
+  }, { passive: true });
+  document.addEventListener("pointerleave", () => { mouse.x = mouse.y = -1e4; });
+  let last = performance.now(), running = true;
+  function frame(now) {
+    if (!running) return;
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    // частицы
+    pctx.clearRect(0, 0, VW, VH);
+    for (const p of parts) {
+      p.y -= p.vy * dt;
+      p.phase += dt * 0.8;
+      p.rot += p.vr * dt;
+      // лёгкое отталкивание от курсора
+      const dx = p.x + p.ox - mouse.x, dy = p.y + p.oy - mouse.y, d2 = dx * dx + dy * dy;
+      if (d2 < 14400) {
+        const d = Math.sqrt(d2) || 1, f = (1 - d / 120) * 90 * dt;
+        p.ox += dx / d * f; p.oy += dy / d * f;
+      }
+      p.ox *= 0.96; p.oy *= 0.96;
+      if (p.y < -40) Object.assign(p, newParticle(false));
+      const fade = Math.min(1, p.y / (VH * 0.3), (VH + 40 - p.y) / (VH * 0.15));
+      if (fade <= 0) continue;
+      const x = p.x + Math.sin(p.phase) * p.sway + p.ox, y = p.y + p.oy;
+      if (p.ch) {
+        pctx.save();
+        pctx.translate(x, y); pctx.rotate(p.rot);
+        pctx.font = `700 ${p.size}px Alegreya, Georgia, serif`;
+        pctx.fillStyle = rgba(D.historical.includes(p.ch) ? C.hist : C.accent, p.a * fade);
+        pctx.textAlign = "center";
+        pctx.fillText(p.ch, 0, 0);
+        pctx.restore();
+      } else {
+        pctx.beginPath();
+        pctx.arc(x, y, p.size, 0, 6.283);
+        pctx.fillStyle = rgba(C.accent, p.a * fade);
+        pctx.fill();
+      }
+    }
+    // след курсора
+    tctx.clearRect(0, 0, VW, VH);
+    const LIFE = 450;
+    while (trail.length && now - trail[0].t > LIFE) trail.shift();
+    if (trail.length > 1) {
+      tctx.lineCap = "round"; tctx.lineJoin = "round";
+      tctx.shadowColor = C.accent; tctx.shadowBlur = 12;
+      for (let i = 1; i < trail.length; i++) {
+        const a = trail[i - 1], b = trail[i];
+        const life = 1 - (now - b.t) / LIFE;
+        tctx.strokeStyle = rgba(C.accent, 0.55 * life);
+        tctx.lineWidth = 1 + 6 * life;
+        tctx.beginPath(); tctx.moveTo(a.x, a.y); tctx.lineTo(b.x, b.y); tctx.stroke();
+      }
+      const h0 = trail[trail.length - 1];
+      tctx.shadowBlur = 16;
+      tctx.fillStyle = rgba(C.accent, 0.5 * (1 - (now - h0.t) / LIFE));
+      tctx.beginPath(); tctx.arc(h0.x, h0.y, 4, 0, 6.283); tctx.fill();
+      tctx.shadowBlur = 0;
+    }
+    requestAnimationFrame(frame);
+  }
+  function startFx() {
+    if (reduceMotion) return;
+    resizeFx();
+    addEventListener("resize", resizeFx);
+    document.addEventListener("visibilitychange", () => {
+      running = !document.hidden;
+      if (running) { last = performance.now(); requestAnimationFrame(frame); }
+    });
+    requestAnimationFrame(frame);
+  }
+
+  function renderAll() {
+    readTheme();
+    corpusTable(); drawMatrix(); drawCompare(); drawVC(); drawWB(); drawProbe(); drawGen(false); drawFindings();
+    registerReveal();
+  }
+  renderAll();
+  startFx();
+})();
+</script>
+</body>
+</html>

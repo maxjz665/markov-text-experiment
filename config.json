@@ -1,0 +1,73 @@
+{
+  "seed": 42,
+  "source": {
+    "dump_path": "../04_Данные_СМАЛТ/smalt.sql.20260115.070144.gz",
+    "dump_sha256": "75e51b17d76cfc07308ee6cd3aa0e5c241d7c64b2074376fe13fb7298519a275",
+    "private_dir": "data/private",
+    "raw_dir": "data/raw"
+  },
+  "selection": {
+    "comment": "Значения кодов взяты из pysmalt: templates/text_app/import_form.html и models/tbl_text.py",
+    "AUTHOR_VERIFY": 1,
+    "STATUS": 2,
+    "CATEGORY": 0,
+    "INUSE1": 1,
+    "token_order": ["CHAPTER_INDEX", "PARAGRAPH_INDEX", "SENTENCE_INDEX", "WORD_INDEX", "ID_WORD"]
+  },
+  "authors": [
+    {"author_id": 1,  "key": "dostoevsky_fm", "label": "Ф. М. Достоевский"},
+    {"author_id": 2,  "key": "dostoevsky_mm", "label": "М. М. Достоевский"},
+    {"author_id": 4,  "key": "grigoryev",     "label": "А. А. Григорьев"},
+    {"author_id": 14, "key": "strakhov",      "label": "Н. Н. Страхов"},
+    {"author_id": 15, "key": "meshchersky",   "label": "В. П. Мещерский"},
+    {"author_id": 27, "key": "shchebalsky",   "label": "П. К. Щебальский"},
+    {"author_id": 32, "key": "putsykovich",   "label": "В. Ф. Пуцыкович"}
+  ],
+  "exclude_texts": {
+    "347": "почти полный дубликат text.ID=209 (совпадение 5-словных шинглов 98,5 %), оставлен меньший ID",
+    "141": "перевод (Шиллер, «Наивная и сентиментальная поэзия», ст. 1) — не оригинальный текст автора",
+    "111": "перевод (Шиллер, «Наивная и сентиментальная поэзия», ст. 2) — не оригинальный текст автора",
+    "314": "частные письма 1840-х гг. — иной жанр, чем журнальная публицистика/критика остальных текстов"
+  },
+  "orthography_check": {
+    "comment": "Текст с ъ на конце слов, но почти без ѣ, считается частично модернизированным при наборе и исключается",
+    "min_yat_per_1000_letters": 5.0,
+    "min_final_hard_sign_share": 0.1
+  },
+  "preprocess": {
+    "mode": "original",
+    "cross_word": false,
+    "keep_yo": true,
+    "strip_stress_marks": true,
+    "stress_marks": ["̀", "́"],
+    "homoglyph_repair": true,
+    "homoglyphs": {"a": "а", "c": "с", "e": "е", "i": "і", "o": "о", "p": "р", "x": "х", "y": "у", "ө": "ѳ"}
+  },
+  "alphabet": "абвгдеёжзиійклмнопрстуфхцчшщъыьѣэюяѳ",
+  "vowels": "аеёиоуыэюяѣі",
+  "consonants": "бвгджзйклмнпрстфхцчшщѳ",
+  "vc_breakers": "ъь",
+  "low_support_threshold": 30,
+  "balanced": {
+    "enabled": true,
+    "chunk_tokens": 100,
+    "letters_per_author": null
+  },
+  "top_graph_edges": 25,
+  "difference_pairs": [
+    ["dostoevsky_fm", "dostoevsky_mm"],
+    ["dostoevsky_fm", "grigoryev"],
+    ["dostoevsky_fm", "putsykovich"],
+    ["meshchersky", "putsykovich"]
+  ],
+  "within_between": {
+    "enabled": true,
+    "letters_each": 30000,
+    "repeats": 20
+  },
+  "attribution_probe": {
+    "enabled": true,
+    "min_text_letters": 5000,
+    "smoothing_alpha": 0.5
+  }
+}
